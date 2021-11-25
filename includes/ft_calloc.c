@@ -1,39 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msierra- <msierra-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/16 11:03:17 by msierra-          #+#    #+#             */
-/*   Updated: 2021/11/25 17:42:54 by msierra-         ###   ########.fr       */
+/*   Created: 2021/09/15 14:13:00 by msierra-          #+#    #+#             */
+/*   Updated: 2021/11/25 17:41:38 by msierra-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-char	*ft_substr(const char *s, unsigned int start, size_t len)
+void	*ft_calloc(size_t count, size_t size)
 {
-	char	*a;
-	size_t	i;
-	size_t	lens;
+	void	*a;
 
-	lens = ft_strlen(s);
-	i = 0;
-	if (!s)
-		return (NULL);
-	if (start >= lens)
-		len = 0;
-	if (len > lens)
-		len = lens;
-	a = (char *)malloc((len + 1) * sizeof(char));
+	if (count == 0)
+		count = 1;
+	if (size == 0)
+		size = 1;
+	a = malloc(count * size);
 	if (!a)
 		return (NULL);
-	while (i < len && s[start + i])
-	{
-		a[i] = s[start + i];
-		i++;
-	}
-	a[i] = '\0';
+	ft_bzero(a, (count * size));
 	return (a);
 }

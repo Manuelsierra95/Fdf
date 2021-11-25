@@ -1,39 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*   ft_isometric.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msierra- <msierra-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/16 11:03:17 by msierra-          #+#    #+#             */
-/*   Updated: 2021/11/25 17:42:54 by msierra-         ###   ########.fr       */
+/*   Created: 2021/11/25 15:48:23 by msierra-          #+#    #+#             */
+/*   Updated: 2021/11/25 17:51:43 by msierra-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
-char	*ft_substr(const char *s, unsigned int start, size_t len)
-{
-	char	*a;
-	size_t	i;
-	size_t	lens;
+// void	ft_is_iso()
+// {
+	
+// }
 
-	lens = ft_strlen(s);
-	i = 0;
-	if (!s)
-		return (NULL);
-	if (start >= lens)
-		len = 0;
-	if (len > lens)
-		len = lens;
-	a = (char *)malloc((len + 1) * sizeof(char));
-	if (!a)
-		return (NULL);
-	while (i < len && s[start + i])
-	{
-		a[i] = s[start + i];
-		i++;
-	}
-	a[i] = '\0';
-	return (a);
-}
+// void	ft_isometric()
+// {
+	
+// }
