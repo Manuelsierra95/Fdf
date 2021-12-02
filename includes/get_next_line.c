@@ -1,79 +1,106 @@
-#include <stdlib.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msierra- <msierra-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/04 15:08:20 by msierra-          #+#    #+#             */
+/*   Updated: 2021/11/29 18:23:57 by msierra-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
-char	*ft_strdup(char *s)
+int	ft_ifsave(char **save)
 {
-	int		i;
-	char	*str;
-
-	i = 0;
-	while (s[i])
-		i++;
-	str = (char *) malloc(i + 1);
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (s[i])
+	if (!*save)
+		return (0);
+	if (!**save)
 	{
-		str[i] = s[i];
-		i++;
+		free(*save);
+		*save = NULL;
+		return (0);
 	}
-	str[i] = '\0';
-	return (str);
+	return (1);
 }
 
-char	*ft_strjoin(char *s, char c)
+char	*ft_read(int fd, char **save, char *temp)
 {
-	char	*str;
-	int		i;
+	int	numr;
 
-	i = 0;
-	while (s[i])
-		i++;
-	str = (char *) malloc(i + 2);
-	if (!str)
+	temp = malloc(100000 + 1);
+	if (!temp)
+		return (NULL);
+	while ((!*save || !ft_strchr(*save, '\n')))
+	{
+		numr = read(fd, temp, 100000);
+		if (numr <= 0)
+			break ;
+		temp[numr] = '\0';
+		if (save != NULL && save[0] != '\0')
+			*save = ft_strjoin(*save, temp);
+		else
+			*save = ft_strdup(temp);
+	}
+	free(temp);
+	return (*save);
+}
+
+char	*ft_cut(char *s, int c, char **save)
+{
+	size_t	len;
+	size_t	i;
+	char	*line;
+	char	*aux;
+
+	if (!*save)
 		return (NULL);
 	i = 0;
-	while (s[i])
-	{
-		str[i] = s[i];
+	len = ft_strlen(s);
+	aux = *save;
+	while (s[i] != (char)c && i < len)
 		i++;
-	}
-	str[i] = c;
-	str[i + 1] = '\0';
-	free(s);
-	return (str);
+	line = ft_substr(s, 0, (i + 1));
+	*save = ft_substr(s, (i + 1), len);
+	free(aux);
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	char	buf;
-	char	*line;
-	int		ret;
-	int		i;
+	char		*temp;
+	static char	*save;
 
-	if (fd < 0)
+	temp = "";
+	if (100000 <= 0 || fd < 0)
 		return (NULL);
-	line = ft_strdup("");
-	while ((ret = read(fd, &buf, 1)) > 0)
+	if (save != NULL && save[0] != '\0')
 	{
-		line = ft_strjoin(line, buf);
-		if (buf == '\n')
-			break ;
+		if (!(ft_strchr(temp, '\n')))
+			ft_read(fd, &save, temp);
+		temp = ft_cut(save, '\n', &save);
 	}
+	else
+	{
+		ft_read(fd, &save, temp);
+		if (!ft_ifsave(&save))
+			return (NULL);
+		temp = ft_cut(save, '\n', &save);
+	}
+	if (!temp)
+		return (NULL);
+	return (temp);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	size_t	i;
+
 	i = 0;
-	while (line[i])
+	while (s[i] && s[i] != (char)c)
 		i++;
-	if (i == 0)
-	{
-		free(line);
-		line = NULL;
-	}
-	if (ret == -1)
-	{
-		free(line);
-		line = NULL;
-	}
-	return (line);
+	if (s[i] == '\0' && c != 0)
+		return (0);
+	return ((char *)s + i);
 }

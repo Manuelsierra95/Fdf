@@ -6,90 +6,64 @@
 /*   By: msierra- <msierra-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 17:28:46 by msierra-          #+#    #+#             */
-/*   Updated: 2021/11/25 18:48:47 by msierra-         ###   ########.fr       */
+/*   Updated: 2021/12/02 17:33:55 by msierra-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-char	**ft_readmap(char *argv)
+char	**ft_readmap(char *argv, t_fdf *fdf)
 {
 	char	**matrix;
-	char	*line;
 	int		fd;
 	int		x;
 
 	fd = open(argv, O_RDONLY);
-	line = get_next_line(fd);
 	x = 0;
-	matrix[x++] = line;
-	while(line)
+	matrix = (char **) malloc(fdf->lines * sizeof(char *));
+	while (x < fdf->lines)
 	{
-		line = get_next_line(fd);
-		matrix[x++] = line;
+		matrix[x] = get_next_line(fd);
+		x++;
 	}
-	return(matrix);
+	close(fd);
+	return (matrix);
 }
 
-char	*getnum_z(char *str, int x, int y, t_p ***p)
+void	ft_getargs(char **str, int x, t_p ***p, t_fdf *fdf)
 {
 	int	i;
 
-//20,0xFF0000
-	i = 0;
-	while(str[i])
+	ft_getz2(str, x, p, fdf);
+	ft_getcolor(str, x, p, fdf);
+	i = fdf->nums;
+	while (i >= 0)
 	{
-		if(str[i] == ',')
-		{
-			p[x][y]->color = ft_substr(str[i], i, ft_strlen(str));
-			break ;
-		}
+		free(str[i]);
+		i--;
 	}
-	p[x][y]->z = ft_atoi(str);
+	free(str);
 }
 
-char	**ft_getmatrix_z(char *argv, t_fdf *fdf, t_p ***p)
+void	ft_getz(char *argv, t_fdf *fdf, t_p ***p)
 {
 	char	**matrix;
+	char	**auxmat;
 	int		x;
-	int		y;
-	int		j;
 
-	matrix = ft_readmap(argv);
+	matrix = ft_readmap(argv, fdf);
 	x = 0;
-	while(x < fdf->lines)
+	while (x < fdf->lines)
 	{
-		y = 0;
-		j = 0;
-		while(y < fdf->nums)
-		{
-			if(matrix[x][y] == ' ')
-			{
-				matrix[x][y] = ft_getnum_z(ft_substr(matrix[x], j, y), x, y, p);
-				j = y;
-			}
-			y++;
-		}
+		auxmat = ft_split(matrix[x], ' ');
+		ft_getargs(auxmat, x, p, fdf);
 		x++;
 	}
-}
-
-void	ft_getz(t_p ***p, t_fdf *fdf, char *argv)
-{
-	int		x;
-	int		y;
-	char	**matrix;
-
-	matrix = ft_getmatrix_z(argv, fdf, p);
-	x = 0;
-	while(x < fdf->lines)
+	x = fdf->lines - 1;
+	while (x >= 0)
 	{
-		y = 0;
-		while(y < fdf->nums)
-		{
-			
-			y++;
-		}
-		x++;
-	}	
+		free(matrix[x]);
+		x--;
+	}
+	free(matrix);
 }

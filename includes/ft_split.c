@@ -6,7 +6,7 @@
 /*   By: msierra- <msierra-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/16 13:20:41 by msierra-          #+#    #+#             */
-/*   Updated: 2021/11/25 17:39:00 by msierra-         ###   ########.fr       */
+/*   Updated: 2021/12/02 14:47:59 by msierra-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	**ft_matrix(const char *s, char c, size_t n);
 static char	**ft_empty_matrix(void);
 static char	**free_matrix(char **mat, size_t last_index);
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char *s, char c)
 {
 	size_t	i;
 	char	**matrix;
